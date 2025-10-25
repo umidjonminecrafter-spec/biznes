@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.title }} - Batafsil{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="card shadow p-4 border-0">
+    {% if object.img %}
+      <img src="{{ object.img.url }}"
+           class="img-fluid rounded mx-auto d-block mb-4"
+           style="max-width: 600px; height: auto;"
+           alt="{{ object.title }}">
+    {% endif %}
+
+    <div class="card-body text-center">
+      <h2 class="card-title text-uppercase mb-3">{{ object.title }}</h2>
+
+      <p class="text-muted mb-2">
+        <strong>Kategoriya:</strong> {{ object.category }}
+      </p>
+
+      <p class="text-secondary mb-4">
+        <small><i class="bi bi-calendar"></i> {{ object.sana|date:"d M Y" }}</small>
+      </p>
+
+      <p class="card-text fs-5">{{ object.text }}</p>
+    </div>
+
+    <div class="card-footer bg-white text-center mt-4">
+      <a href="{% url 'index' %}" class="btn btn-outline-primary px-4 py-2">
+        ← Orqaga
+      </a>
+    </div>
+  </div>
+
+  <!-- Yangilikni tahrirlash yoki o‘chirish -->
+  <div class="text-center mt-3">
+    <a href="{% url 'news-update' object.id %}" class="btn btn-warning">O‘zgartirish</a>
+    <a href="{% url 'news-delete' object.id %}" class="btn btn-danger">O‘chirish</a>
+  </div>
+
+  <hr class="my-5">
+
+  <!-- Izohlar qismi -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h4 class="mb-4">💬 Izohlar ({{ comments.count }})</h4>
+
+      {% for comment in comments %}
+        <div class="border rounded p-3 mb-3 bg-light">
+          <strong>{{ comment.user.username }}</strong>
+          <small class="text-muted float-end">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+          <p class="mt-2 mb-0">{{ comment.text }}</p>
+        </div>
+      {% empty %}
+        <p class="text-muted">Hozircha izohlar yo‘q. Birinchi bo‘lib izoh qoldiring!</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Izoh yozish formasi -->
+  {% if user.is_authenticated %}
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3">✍️ Izoh qoldirish</h5>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary px-4">Yuborish</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning mt-3">
+      Izoh yozish uchun <a href="{% url 'login' %}">tizimga kiring</a>.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

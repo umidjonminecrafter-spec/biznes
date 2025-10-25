@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+<input type="text" name="username" placeholder="Username">
+<input type="password" name="password" placeholder="Parol">
+<input type="submit" value="Login">
+</form>
+{% for message in messages %}
+<h2>{{messages}}</h2>
+{% endfor %}
+<p class="mt-3 text-center">
+  <a href="{% url 'password_reset' %}" class="text-secondary">Forgot password?</a>
+</p>
+
+</body>
+</html>
